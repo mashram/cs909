@@ -1,0 +1,4 @@
+
+newrt<-tm_filter(rt7,FUN=sFilter,"TOPICS =='YES'")
+trainset<-tm_filter(newrt,FUN=sFilter,"CGISPLIT =='TRAINING-SET'")
+testset<-tm_filter(newrt,FUN=sFilter,"CGISPLIT =='TEST-SET'")
