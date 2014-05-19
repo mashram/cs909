@@ -1,0 +1,16 @@
+money<-tm_filter(rt9,FUN=sFilter,"Topics =='money-fx'")
+;
+moneyM<-DocumentTermMatrix(money)
+;
+moneyM2<-removeSparseTerms(moneyM,sparse=0.95)
+;
+
+Then applying the three different methods:
+
+moneyM2_hclust<-hclust(dist(moneyM2),method='ward')
+;
+plot(moneyM2_hclust);
+
+moneyM2_Kmeans<-kmeans(moneyM2, 4);
+
+moneyM2_pam <- pam(moneyM2, 4);
