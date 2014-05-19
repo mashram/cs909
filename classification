@@ -1,4 +1,28 @@
+#install packages
+install.packages('tm')
+install.packages('/dcs/pg11/phil/reuters/tm.corpus.Reuters21578', repos=NULL,type='source')
+install.packages('topicmodels')
+install.packages('SnowballC')
 
+require(tm)
+require(tm.corpus.Reuters21578)
+require(topicmodels)
+require(SnowballC)
+data(Reuters21578)
+
+#preprocessing part of the documents
+rt<-Reuters21578  #load the corpus
+rt1<-tm_map(rt,tolower)
+rt2<-tm_map(rt1,removeNumbers)
+rt3<-tm_map(rt2,removePunctuation)
+rt4<-tm_map(rt3,removeWords,stopwords('english'))
+rt5<-tm_map(rt4,stripWhitespace)
+rt6<-tm_map(rt5,stemDocument)
+rt9<-tm_map(rt6,removeWords,'said')
+rt7<-DocumentTermMatrix(rt9)
+
+# create the trainning set and test set
 newrt<-tm_filter(rt7,FUN=sFilter,"TOPICS =='YES'")
 trainset<-tm_filter(newrt,FUN=sFilter,"CGISPLIT =='TRAINING-SET'")
 testset<-tm_filter(newrt,FUN=sFilter,"CGISPLIT =='TEST-SET'")
+
