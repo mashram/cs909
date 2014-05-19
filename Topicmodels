@@ -1,0 +1,35 @@
+#preprocessing part
+
+install.packages('tm')
+install.packages('/dcs/pg11/phil/reuters/tm.corpus.Reuters21578', repos=NULL,type='source')
+install.packages('topicmodels')
+install.packages('SnowballC')
+
+require(tm)
+require(tm.corpus.Reuters21578)
+require(topicmodels)
+require(SnowballC)
+data(Reuters21578)
+
+rt<-Reuters21578
+rt1<-tm_map(rt,tolower)
+rt2<-tm_map(rt1,removeNumbers)
+rt3<-tm_map(rt2,removePunctuation)
+rt4<-tm_map(rt3,removeWords,stopwords('english'))
+rt5<-tm_map(rt4,stripWhitespace)
+rt6<-tm_map(rt5,stemDocument)
+rt9<-tm_map(rt6,removeWords,'said')
+rt7<-DocumentTermMatrix(rt9)
+
+
+rt8<-removeSparseTerms(rt7,sparse=0.995) #remove sparse terms
+
+#delete the non-entry documents
+rowTotals <- apply(rt8 , 1, sum)
+rt8<- rt8[rowTotals>0,]
+
+#applying the LDA method
+ldart<-LDA(rt8,control=list(alpha=0.1),k=10)
+
+#get the topics of the corpus
+terms(ldart)
